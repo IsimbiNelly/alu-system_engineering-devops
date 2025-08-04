@@ -5,7 +5,7 @@
 apt-get update -y
 apt-get install -y haproxy
 
-# Enable HAProxy
+# Enable HAProxy in lb_01
 echo "ENABLED=1" | sudo tee -a /etc/default/haproxy
 
 # Backup existing HAProxy config
@@ -41,8 +41,8 @@ frontend http_front
 
 backend http_back
     balance roundrobin
-    server ${STUDENT_ID}-web-01 3.89.108.224:80 check
-    server ${STUDENT_ID}-web-02 54.152.78.172:80 check
+    server ${STUDENT_ID}-web-01 44.201.238.52:80 check
+    server ${STUDENT_ID}-web-02 54.157.252.190:80 check
 EOF
 
 # Restart HAProxy service

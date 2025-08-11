@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
-# Installs and configures HAProxy to load balance between web-01 and web-02
+# Installs and configures HAProxy to load balance between 6667-web-01 and 6667-web-02
 
+# Install HAProxy
 apt-get update
 apt-get install -y haproxy
 
+# Configure HAProxy
 cat <<EOF > /etc/haproxy/haproxy.cfg
 global
-    log /dev/log    local0
-    log /dev/log    local1 notice
+    log /dev/log local0
+    log /dev/log local1 notice
     chroot /var/lib/haproxy
     stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
     stats timeout 30s
@@ -37,10 +39,12 @@ frontend http_front
 
 backend http_back
     balance roundrobin
-    server web-01 192.168.1.10:80 check
-    server web-02 192.168.1.11:80 check
+    option httpchk
+    server 6667-web-01 44.204.185.22:80 check
+    server 6667-web-02 44.201.227.161:80 check
 EOF
 
+# Restart and enable HAProxy
 systemctl restart haproxy
 systemctl enable haproxy
 
